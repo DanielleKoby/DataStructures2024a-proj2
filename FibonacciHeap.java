@@ -18,10 +18,9 @@ public class FibonacciHeap
 	 * Inner function:
 	 * Constructor of FibonacciHeap initialized with node**/
 	public FibonacciHeap(HeapNode node){
-		FibonacciHeap fibHeap = new FibonacciHeap();
-		fibHeap.size = 1;
-		fibHeap.numOfTrees = 1;
-		fibHeap.min = node;
+		this.size = 1;
+		this.numOfTrees = 1;
+		this.min = node;
 	}
 	
 	/**
