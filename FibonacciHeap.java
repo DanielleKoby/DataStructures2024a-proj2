@@ -62,10 +62,91 @@ public class FibonacciHeap
 	 * Delete the minimal item
 	 *
 	 */
+	// Overload deleteMin() to enable the use of a boolean parameter to support regular delete
+	public void deleteMin(boolean b)
+	{
+		this.numOfCuts += this.min.rank;
+		HeapNode min = this.findMin();
+		HeapNode prev = min.prev;
+		HeapNode next = min.next;
+
+		if (min.child == null)  // min doesn't have children
+		{
+			// min has one or more siblings:
+			if (prev != min && next != min)
+			{
+				prev.next = next;
+				next.prev = prev;
+				this.numOfTrees --;
+			}
+			else  // min has no siblings and no children
+			{
+				this.size = 0;
+				this.numOfTrees = 0;
+				this.min = null;
+				// numOfCuts & numOflinks remain untouched for memory
+			}
+		}
+		else // min has children:
+		{
+			// Take care of the parent-child relationship
+			HeapNode child = min.child;
+			child.parent = null; // detach children from min
+			addToRoots(min.child, false);  // Add the children to the roots chain
+			min.child = null;  // Detach min from its child
+		}
+		min.next = null;  // detach min from other nodes to ensure clean cut
+		min.prev = null;
+
+		// Successive linking - as numOfTrees may be larger than log(n) due to lazy inserts/melds
+		// Enter code for successive linking
+		///////////
+		///////////
+		/////////////
+
+		// Find the new min after successive linking - roots length is bounded by log(n)
+		HeapNode curr = prev;
+		this.min = curr;
+		while (curr.next != prev){
+			curr = curr.next;
+			if (curr.key < this.min.key)
+			{
+				this.min = curr;
+			}
+		}
+	}
+
+//		// Take care of the parent-child relationship
+//		if (min.child != null){
+//			HeapNode child = min.child;
+//			if (min.parent != null)  // 'min' is not a root
+//			{  // Bypass
+//				HeapNode parent = min.parent;
+//				if (next != min){  // min has brothers
+//
+//				}
+//				parent.child = child;
+//				child.parent = parent;
+//			}
+//			else  // There is a child but not parent - meaning the deleted node is indeed a root (but might not be the real min)
+//			{
+//				child.parent = null; // detach children from min
+//			}
+//			min.child = null;  // Detach min from its child
+//		}
+//		if (min.parent != null) // min is a leaf and not a root
+//		{
+//
+//		}
+//		min.next = null;  // detach min from other nodes to ensure clean cut
+//		min.prev = null;
+//		return; // should be replaced by student code
+//	}
+
+
 	public void deleteMin()
 	{
-		return; // should be replaced by student code
-
+		deleteMin(true);
 	}
 
 	/**
