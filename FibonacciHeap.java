@@ -63,7 +63,7 @@ public class FibonacciHeap
 	 *
 	 */
 	// Overload deleteMin() to enable the use of a boolean parameter to support regular delete
-	public void deleteMin(boolean b)
+	public void deleteMin(boolean isMin)
 	{
 		this.numOfCuts += this.min.rank;
 		HeapNode min = this.findMin();
@@ -95,25 +95,43 @@ public class FibonacciHeap
 			addToRoots(min.child, false);  // Add the children to the roots chain
 			min.child = null;  // Detach min from its child
 		}
-		min.next = null;  // detach min from other nodes to ensure clean cut
-		min.prev = null;
+//		min.next = null;  // detach min from other nodes to ensure clean cut
+//		min.prev = null;
 
 		// Successive linking - as numOfTrees may be larger than log(n) due to lazy inserts/melds
-		// Enter code for successive linking
-		///////////
-		///////////
-		/////////////
-
-		// Find the new min after successive linking - roots length is bounded by log(n)
-		HeapNode curr = prev;
-		this.min = curr;
-		while (curr.next != prev){
-			curr = curr.next;
-			if (curr.key < this.min.key)
-			{
-				this.min = curr;
+		if (isMin) { // deleted the real min - find the new one:
+			// Create the log(n) buckets:
+			HeapNode[] buckets = new HeapNode[(int) Math.ceil((Math.log(this.size) / Math.log(2)) + 1)];
+			HeapNode curr = prev;
+			for (int tree=0; tree<numOfTrees; tree++){
+				if (buckets[curr.rank] == null){
+					buckets[curr.rank] = curr;
+				}
+				else{
+					HeapNode rootOfLinked = this.link(buckets[curr.rank], curr);
+					buckets[curr.rank+1] = rootOfLinked;
+					buckets[curr.rank] = null;
+				}
+				curr = curr.next;
 			}
+			// Find the new min after successive linking - roots length is bounded by log(n)
+			HeapNode current = prev;
+			int cnt = 1;
+			this.min = current;
+			while (current.next != prev){
+				current = current.next;
+				cnt ++;
+				if (current.key < this.min.key)
+				{
+					this.min = current;
+				}
+			}
+			this.numOfTrees = cnt;
 		}
+		else{ // No need for successive linking
+			return;
+		}
+		return;
 	}
 
 //		// Take care of the parent-child relationship
@@ -177,8 +195,18 @@ public class FibonacciHeap
 	 *
 	 */
 	public void delete(HeapNode x) 
-	{    
-		return; // should be replaced by student code
+	{
+		if (x == this.min){
+			deleteMin(true);
+		}
+		else{ // x is not the min
+			HeapNode realMin = this.min;
+			this.decreaseKey(x, x.key - min.key +1);  // x.key will now be (min.key -1) --> the new min
+			// Check if key will become min and if it can be negative;
+			this.deleteMin(false);  // Without successive linking
+			this.min = realMin;
+		}
+		return;
 	}
 
 
@@ -295,11 +323,29 @@ public class FibonacciHeap
 
 
 	/**
-	  Inner function-link
-	  Link two nodes with the same rank
-	  */
-	public  void link(HeapNode node1, HeapNode node2){
-		return;
+	 * Inner function-link
+	 * Link two nodes with the same rank
+	 *
+	 * @return
+	 */
+	///// Go over!!!!
+	public HeapNode link(HeapNode node1, HeapNode node2){
+		this.numOfLinks ++;
+		HeapNode root = node1;
+		if (node2.key < root.key){
+			root = node2;
+			HeapNode oldChild = root.child;
+			node1.next = oldChild;
+			oldChild.prev = node1;
+			root.child = node1;
+		}
+		else{
+			HeapNode oldChild = root.child;
+			node2.next = oldChild;
+			oldChild.prev = node2;
+			root.child = node2;
+		}
+		return root;
 	}
 
 
