@@ -241,7 +241,6 @@ public class FibonacciHeap
 	{
 		addToRoots(heap2.min, true); // Concatenating the heap to the list of roots by the minimum node
 		this.size += heap2.size;
-		this.numOfTrees += heap2.numOfTrees;
 		if (heap2.min.key < this.min.key) {
 			this.min = heap2.min;
 		}
@@ -310,15 +309,47 @@ public class FibonacciHeap
 	 if true -> called by meld and number of trees increases according to the new external heap
 	 */
 	public void addToRoots(HeapNode node, Boolean externalHeap){
-		if (this.min == null){ // adding first node to an empty heap
+		// case 0- adding first node to an empty heap
+		if (this.min == null){
 			this.min = node;
 		}
-		node.next = this.min.next;
-		node.prev = this.min;
-		this.min.next = node;
-		if (!externalHeap){
-			this.numOfTrees++;
+
+		// calculate the number of new trees
+		int numOfNewTrees = numOfSibs(node);
+
+		// case 1- node without brothers
+		if (node.next == node && node.prev == node) {
+			node.next = this.min.next;
+			node.prev = this.min;
+			this.min.next.prev = node;
+			this.min.next = node;
 		}
+		// case 2- node have brothers (maybe sisters as well)
+		else {
+			this.min.next.prev = node;
+			node.prev.next = this.min.next;
+			this.min.next = node;
+			node.prev = this.min;
+
+		}
+		// update number of trees
+		this.numOfTrees += numOfNewTrees;
+	}
+
+	/**
+	 Inner function-numOfSibs
+	 @param node
+	 @return the number of siblings (including the node itself)
+
+	 */
+	public int numOfSibs(HeapNode node){
+		int numOfSibs = 1;
+		HeapNode endNode = node;
+		while (endNode.next != node){
+			numOfSibs++;
+			endNode = endNode.next;
+		}
+		return numOfSibs;
 	}
 
 
