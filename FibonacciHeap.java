@@ -52,7 +52,7 @@ public class FibonacciHeap
 	 */
 	public HeapNode findMin()
 	{
-		return min; // should be replaced by student code
+		return this.min; // should be replaced by student code
 	}
 
 	/**
@@ -64,7 +64,9 @@ public class FibonacciHeap
 	public void deleteMin(boolean isMin)
 	{
 		HeapNode tempMin = this.detachMinNode();
-		this.size --;
+		if (this.size > 0){
+			this.size --;
+		}
 		if(size == 0 || tempMin == null){
 			return;
 		}
