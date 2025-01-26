@@ -97,12 +97,12 @@ public class FibonacciHeap
 //		assert x.key - diff > 0;
 		x.key -= diff;
 		HeapNode realMin = this.min;
-		if (x.key < this.min.key) { // Updating minimum node if needed
+		if (x.key <= this.min.key) { // Updating minimum node if needed
 			this.min = x;
 		}
 
-		// Invariant doesn't preserved
-		if ((x.parent != null) && (x.key < x.parent.key)) {
+		// Invariant isn't preserved
+		if ((x.parent != null) && (x.key <= x.parent.key)) {
 			this.cascadingCut(x, x.parent, realMin);
 		}
 		// else - Invariant is preserved and no cuts needed
@@ -120,7 +120,7 @@ public class FibonacciHeap
 		}
 		else{ // x is not the min
 			HeapNode realMin = this.min;
-			this.decreaseKey(x, x.key - min.key +1);  // x.key will now be (min.key -1) --> the new min
+			this.decreaseKey(x, x.key - min.key);  // x.key will now be (min.key -1) --> the new min
 			// Check if key will become min and if it can be negative;
 			this.deleteMin(false);  // Without successive linking
 			this.min = realMin;
