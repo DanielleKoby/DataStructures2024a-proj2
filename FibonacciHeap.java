@@ -120,7 +120,7 @@ public class FibonacciHeap
 		}
 		else{ // x is not the min
 			HeapNode realMin = this.min;
-			this.decreaseKey(x, x.key - min.key);  // x.key will now be (min.key -1) --> the new min
+			this.decreaseKey(x, x.key - min.key);  // x.key will now be (min.key) --> the new min
 			// Check if key will become min and if it can be negative;
 			this.deleteMin(false);  // Without successive linking
 			this.min = realMin;
@@ -443,27 +443,6 @@ public class FibonacciHeap
 		root.rank ++;
 
 		return root;
-
-
-
-		// Ziv's version
-//		if (node2.key < root.key){
-//			root = node2;
-//			HeapNode oldChild = root.child;
-//			node1.next = oldChild;
-//			oldChild.prev = node1;
-//			root.child = node1;
-//		}
-//		else{
-//			HeapNode oldChild = root.child;
-//			node2.next = oldChild;
-//			if (oldChild != null) {
-//				oldChild.next = node2;
-//				node2.prev = oldChild;
-//			}
-//			root.child = node2;
-//		}
-//		return root;
 	}
 
 	public Boolean isEmpty(){
