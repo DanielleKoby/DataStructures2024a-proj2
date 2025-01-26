@@ -1,3 +1,11 @@
+// name1: Ziv Shani
+// username1: zivshani
+// id1: 207918723
+
+// name2: Danielle Koby
+// username2: daniellekoby
+// id2: 322330390
+
 /**
  * FibonacciHeap
  * An implementation of Fibonacci heap over positive integers.
@@ -28,7 +36,7 @@ public class FibonacciHeap
 	 */
 	public FibonacciHeap()
 	{
-		// should be replaced by student code
+		// Initialization of the instance attributes is inline
 	}
 
 	/**
